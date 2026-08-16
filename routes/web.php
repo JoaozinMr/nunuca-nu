@@ -28,6 +28,8 @@ Route::get('/pedido/{code}', [CheckoutController::class, 'confirmation'])
 // ── Admin ─────────────────────────────────────────────────────────────────────
 Route::prefix('admin')->name('admin.')->group(function (): void {
 
+    Route::redirect('/', '/admin/login')->name('admin.home');
+
     // ── Auth (guest only) ─────────────────────────────────────────────────────
     Route::middleware('guest')->group(function (): void {
         Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
