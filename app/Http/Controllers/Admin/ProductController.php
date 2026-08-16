@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
+// TODO: Fix products page
 class ProductController extends Controller
 {
     public function index(): Response
@@ -21,8 +22,8 @@ class ProductController extends Controller
         $products = Product::orderBy('category')->orderBy('name')->get();
 
         return Inertia::render('Admin/Products/Index', [
-            'products'     => ProductResource::collection($products),
-            'lowStockCount'=> Product::lowStock()->count(),
+            'products' => ProductResource::collection($products),
+            'lowStockCount' => Product::lowStock()->count(),
         ]);
     }
 

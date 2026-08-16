@@ -14,9 +14,11 @@ use Inertia\Response;
 
 class DashboardController extends Controller
 {
+    // TODO: Check if revenue cards are correct
+    // TODO: Dashboard redirect is not working
     public function index(): Response
     {
-        $today     = Carbon::today();
+        $today = Carbon::today();
         $monthStart = Carbon::now()->startOfMonth();
 
         // ── Revenue-counting statuses (exclude pending & canceled) ─────────────
@@ -28,7 +30,7 @@ class DashboardController extends Controller
 
         // ── KPI cards ──────────────────────────────────────────────────────────
         $stats = [
-            'revenue_today'   => (float) Order::whereIn('status', $revenueStatuses)
+            'revenue_today' => (float) Order::whereIn('status', $revenueStatuses)
                 ->whereDate('created_at', $today)
                 ->sum('total'),
 
@@ -36,15 +38,15 @@ class DashboardController extends Controller
                 ->where('created_at', '>=', $monthStart)
                 ->sum('total'),
 
-            'orders_today'    => Order::whereDate('created_at', $today)->count(),
+            'orders_today' => Order::whereDate('created_at', $today)->count(),
 
-            'orders_total'    => Order::count(),
+            'orders_total' => Order::count(),
 
-            'pending_count'   => Order::where('status', Order::STATUS_PENDING)->count(),
+            'pending_count' => Order::where('status', Order::STATUS_PENDING)->count(),
 
             'preparing_count' => Order::where('status', Order::STATUS_PREPARING)->count(),
 
-            'delivery_count'  => Order::where('status', Order::STATUS_OUT_FOR_DELIVERY)->count(),
+            'delivery_count' => Order::where('status', Order::STATUS_OUT_FOR_DELIVERY)->count(),
 
             'low_stock_count' => Product::lowStock()->count(),
         ];
@@ -56,7 +58,7 @@ class DashboardController extends Controller
             ->get();
 
         return Inertia::render('Admin/Dashboard', [
-            'stats'        => $stats,
+            'stats' => $stats,
             'recentOrders' => OrderResource::collection($recentOrders),
             'statusLabels' => Order::STATUS_LABELS,
         ]);
