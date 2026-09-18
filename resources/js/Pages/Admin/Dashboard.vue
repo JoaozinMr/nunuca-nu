@@ -274,8 +274,8 @@ const deliveryLabels = {
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: #faf8f5;
-  font-family: 'Inter', system-ui, sans-serif;
+  background: #F6EEE0;
+  font-family: 'DM Sans', sans-serif;
 }
 
 /* ─── Sidebar ─── */
@@ -285,7 +285,7 @@ const deliveryLabels = {
   top: 0;
   left: 0;
   bottom: 0;
-  background: #1e1008;
+  background: #3B1A0C;
   display: flex;
   flex-direction: column;
   z-index: 50;
@@ -297,14 +297,14 @@ const deliveryLabels = {
   font-family: 'Fredoka', 'Nunito', sans-serif;
   font-size: 22px;
   font-weight: 700;
-  color: #f5e6c8;
+  color: #F6EEE0;
   letter-spacing: -0.3px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid rgba(246,238,224,.08);
   margin-bottom: 12px;
 }
 
 .sb-logo-nu {
-  color: #e8945a;
+  color: #B07535;
 }
 
 .sb-nav {
@@ -321,27 +321,28 @@ const deliveryLabels = {
   gap: 10px;
   padding: 10px 14px;
   border-radius: 10px;
-  color: rgba(245, 230, 200, 0.65);
+  color: rgba(246, 238, 224, 0.55);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
   position: relative;
 }
 
 .sb-link:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #f5e6c8;
+  background: rgba(246, 238, 224, 0.07);
+  color: rgba(246, 238, 224, 0.85);
 }
 
 .sb-link.active {
-  background: rgba(232, 148, 90, 0.18);
-  color: #e8945a;
+  background: rgba(246, 238, 224, 0.12);
+  color: #F6EEE0;
+  font-weight: 500;
 }
 
 .sb-badge {
   margin-left: auto;
-  background: #e8945a;
+  background: #B07535;
   color: #fff;
   font-size: 11px;
   font-weight: 700;
@@ -358,7 +359,7 @@ const deliveryLabels = {
 
 .sb-footer {
   padding: 16px 12px;
-  border-top: 1px solid rgba(255,255,255,0.07);
+  border-top: 1px solid rgba(246,238,224,.08);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -370,7 +371,7 @@ const deliveryLabels = {
   gap: 8px;
   padding: 9px 14px;
   border-radius: 10px;
-  color: rgba(245, 230, 200, 0.5);
+  color: rgba(246, 238, 224, 0.5);
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
@@ -383,8 +384,8 @@ const deliveryLabels = {
 }
 
 .sb-footer-link:hover {
-  background: rgba(255,255,255,0.06);
-  color: #f5e6c8;
+  background: rgba(246,238,224,.07);
+  color: #F6EEE0;
 }
 
 .sb-logout:hover {
@@ -406,16 +407,17 @@ const deliveryLabels = {
 }
 
 .page-title {
-  font-size: 26px;
-  font-weight: 700;
-  color: #1a0d00;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #3B1A0C;
   margin: 0 0 4px;
   letter-spacing: -0.4px;
 }
 
 .page-sub {
   font-size: 14px;
-  color: #9c845e;
+  color: #7A5040;
   margin: 0;
   text-transform: capitalize;
 }
@@ -429,18 +431,19 @@ const deliveryLabels = {
 }
 
 .stat-card {
-  background: #fff;
+  background: #FDFAF4;
   border-radius: 16px;
   padding: 22px 24px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.05);
+  border: 1px solid #EAD9C2;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   transition: box-shadow 0.15s;
 }
 
 .stat-card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.09), 0 0 0 1px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.09);
 }
 
 .stat-card.accent {
@@ -451,7 +454,7 @@ const deliveryLabels = {
 .stat-label {
   font-size: 12px;
   font-weight: 600;
-  color: #9c845e;
+  color: #7A5040;
   text-transform: uppercase;
   letter-spacing: 0.6px;
 }
@@ -463,7 +466,7 @@ const deliveryLabels = {
 .stat-val {
   font-size: 26px;
   font-weight: 700;
-  color: #1a0d00;
+  color: #3B1A0C;
   line-height: 1.1;
   letter-spacing: -0.5px;
 }
@@ -474,7 +477,7 @@ const deliveryLabels = {
 
 .stat-sub {
   font-size: 12px;
-  color: #b8a07a;
+  color: #7A5040;
 }
 
 .stat-card.accent .stat-sub {
@@ -548,7 +551,7 @@ const deliveryLabels = {
 .mini-val {
   font-size: 22px;
   font-weight: 700;
-  color: #1a0d00;
+  color: #3B1A0C;
   line-height: 1;
 }
 
@@ -558,15 +561,15 @@ const deliveryLabels = {
 
 .mini-label {
   font-size: 12px;
-  color: #9c845e;
+  color: #7A5040;
   font-weight: 500;
 }
 
 /* ─── Panel ─── */
 .panel {
-  background: #fff;
+  background: #FDFAF4;
   border-radius: 18px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.05);
+  border: 1px solid #EAD9C2;
   overflow: hidden;
 }
 
@@ -575,26 +578,26 @@ const deliveryLabels = {
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px 16px;
-  border-bottom: 1px solid #f0e8da;
+  border-bottom: 1px solid #EAD9C2;
 }
 
 .panel-title {
   font-size: 16px;
   font-weight: 700;
-  color: #1a0d00;
+  color: #3B1A0C;
   margin: 0;
 }
 
 .panel-action {
   font-size: 13px;
   font-weight: 600;
-  color: #e8945a;
+  color: #B07535;
   text-decoration: none;
   transition: color 0.15s;
 }
 
 .panel-action:hover {
-  color: #c8743a;
+  color: #8a5a20;
 }
 
 /* ─── Table ─── */
@@ -613,18 +616,18 @@ th {
   padding: 10px 16px;
   font-size: 11px;
   font-weight: 700;
-  color: #9c845e;
+  color: #7A5040;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  background: #faf8f5;
-  border-bottom: 1px solid #f0e8da;
+  background: #F6EEE0;
+  border-bottom: 1px solid #EAD9C2;
   white-space: nowrap;
 }
 
 td {
   padding: 13px 16px;
-  color: #2d1a06;
-  border-bottom: 1px solid #f5f0e8;
+  color: #3B1A0C;
+  border-bottom: 1px solid #EAD9C2;
   vertical-align: middle;
 }
 
@@ -638,20 +641,20 @@ tr:last-child td {
 }
 
 .order-row:hover td {
-  background: #fdf8f1;
+  background: rgba(246,238,224,.5);
 }
 
 .mono {
-  font-family: 'JetBrains Mono', 'Fira Mono', monospace;
-  font-size: 12.5px;
-  color: #5c3a10;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  color: #3B1A0C;
   font-weight: 600;
 }
 
 .dt-chip {
   display: inline-block;
-  background: #f0e8da;
-  color: #7a5520;
+  background: #EAD9C2;
+  color: #7A5040;
   border-radius: 6px;
   padding: 2px 9px;
   font-size: 12px;
@@ -661,7 +664,7 @@ tr:last-child td {
 
 .date-cell {
   font-size: 12.5px;
-  color: #9c845e;
+  color: #7A5040;
   white-space: nowrap;
 }
 
@@ -709,7 +712,7 @@ tr:last-child td {
   align-items: center;
   gap: 12px;
   padding: 56px 24px;
-  color: #b8a07a;
+  color: #7A5040;
   font-size: 14px;
 }
 

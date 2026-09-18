@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { router, Link, useForm, usePage } from '@inertiajs/vue3'
-import { route } from 'ziggy-js'
 
 // ---------------------------------------------------------------------------
 // Props
@@ -67,8 +66,13 @@ function closeProductModal() {
 function onImageChange(event) {
   const file = event.target.files[0]
   if (!file) return
-  form.image = file
-  imagePreviewUrl.value = URL.createObjectURL(file)
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    form.image = e.target.result
+    imagePreviewUrl.value = e.target.result
+  }
+  reader.readAsDataURL(file)
 }
 
 function submitProduct() {
@@ -123,6 +127,11 @@ function formatPrice(value) {
   if (isNaN(num)) return 'R$ 0,00'
   return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
+
+const logoutForm = useForm({})
+function logout() {
+  logoutForm.post(route('admin.logout'))
+}
 </script>
 
 <template>
@@ -131,64 +140,57 @@ function formatPrice(value) {
 
     <!-- ── SIDEBAR ─────────────────────────────────────────────────────────── -->
     <aside class="sidebar">
-      <div class="sidebar-logo">
-        <Link :href="route('home')">
-          <img src="/images/logo.svg" alt="Nunuca" />
-        </Link>
-      </div>
+      <div class="sb-logo">nunuca<span class="sb-logo-nu">.</span>nu</div>
 
-      <nav class="sidebar-nav">
-        <Link :href="route('admin.dashboard')" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/>
-            <rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>
+      <nav class="sb-nav">
+        <Link :href="route('admin.dashboard')"
+              :class="['sb-link', { active: route().current('admin.dashboard') }]">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
           </svg>
           Dashboard
         </Link>
 
-        <Link :href="route('admin.products.index')" class="nav-item active">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <path d="M16 10a4 4 0 0 1-8 0"/>
-          </svg>
-          Produtos
-        </Link>
-
-        <Link :href="route('admin.orders.index')" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        <Link :href="route('admin.orders.index')"
+              :class="['sb-link', { active: route().current('admin.orders.*') }]">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+            <rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/>
           </svg>
           Pedidos
         </Link>
 
-        <Link :href="route('admin.customers.index')" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        <Link :href="route('admin.products.index')"
+              :class="['sb-link', { active: route().current('admin.products.*') }]">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
           </svg>
-          Clientes
+          Produtos
         </Link>
       </nav>
 
-      <div class="sidebar-footer">
-        <Link :href="route('logout')" method="post" as="button" class="nav-item logout-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="sb-footer">
+        <a :href="route('home')" target="_blank" class="sb-footer-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          Ver loja
+        </a>
+        <button class="sb-footer-link sb-logout" @click="logout">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
             <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
           </svg>
           Sair
-        </Link>
+        </button>
       </div>
     </aside>
 
     <!-- ── MAIN CONTENT ────────────────────────────────────────────────────── -->
-    <main class="main-content">
+    <main class="admin-main">
 
       <!-- Page header -->
       <div class="page-header">
@@ -478,17 +480,17 @@ function formatPrice(value) {
 
 <style scoped>
 /* ============================================================
-   CSS VARIABLES (ensure these match your global theme or
-   override here as fallback)
+   CSS VARIABLES
    ============================================================ */
 :root {
-  --choco:    #5C3A1E;
-  --caramel:  #C47A2B;
-  --cream:    #FDF6EC;
-  --cream-2:  #EDE3D5;
-  --text-dark:#2C1810;
-  --text-mid: #6B4F3A;
-  --text-soft:#9C7B60;
+  --choco:    #3B1A0C;
+  --caramel:  #B07535;
+  --cream:    #F6EEE0;
+  --cream-2:  #EAD9C2;
+  --white:    #FDFAF4;
+  --text-dark:#3B1A0C;
+  --text-mid: #7A5040;
+  --text-soft:#7A5040;
   --red:      #DC2626;
   --red-light:#FEE2E2;
 }
@@ -500,88 +502,28 @@ function formatPrice(value) {
   display: flex;
   min-height: 100vh;
   background: var(--cream);
+  font-family: 'DM Sans', sans-serif;
 }
 
 /* ── SIDEBAR ──────────────────────────────────────────────── */
-.sidebar {
-  width: 240px;
-  min-height: 100vh;
-  background: var(--choco);
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-.sidebar-logo {
-  padding: 24px 20px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.sidebar-logo img {
-  height: 36px;
-  width: auto;
-}
-
-.sidebar-nav {
-  flex: 1;
-  padding: 16px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  color: rgba(255,255,255,0.7);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.15s, color 0.15s;
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  width: 100%;
-  text-align: left;
-}
-
-.nav-item:hover {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-}
-
-.nav-item.active {
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-}
-
-.sidebar-footer {
-  padding: 12px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-.logout-btn {
-  color: rgba(255,255,255,0.6);
-}
-
-.logout-btn:hover {
-  color: #fff;
-  background: rgba(220, 38, 38, 0.25);
-}
+.sidebar { width: 240px; position: fixed; top: 0; left: 0; bottom: 0; background: #3B1A0C; display: flex; flex-direction: column; z-index: 50; }
+.sb-logo { padding: 28px 24px 20px; font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 700; color: #F6EEE0; line-height: .9; border-bottom: 1px solid rgba(246,238,224,.08); }
+.sb-logo-nu { color: #B07535; }
+.sb-nav { flex: 1; display: flex; flex-direction: column; gap: 2px; padding: 16px 12px; }
+.sb-link { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 10px; color: rgba(246,238,224,.55); font-size: 14px; font-weight: 400; text-decoration: none; transition: background .18s, color .18s; position: relative; }
+.sb-link:hover { background: rgba(246,238,224,.07); color: rgba(246,238,224,.85); }
+.sb-link.active { background: rgba(246,238,224,.12); color: #F6EEE0; font-weight: 500; }
+.sb-footer { padding: 16px 12px; border-top: 1px solid rgba(246,238,224,.08); display: flex; flex-direction: column; gap: 2px; }
+.sb-footer-link { display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 10px; color: rgba(246,238,224,.5); font-size: 13px; text-decoration: none; background: none; border: none; cursor: pointer; transition: background .15s, color .15s; width: 100%; text-align: left; }
+.sb-footer-link:hover { background: rgba(246,238,224,.07); color: #F6EEE0; }
+.sb-logout:hover { background: rgba(239,68,68,.12); color: #f87171; }
 
 /* ── MAIN CONTENT ─────────────────────────────────────────── */
-.main-content {
+.admin-main {
+  margin-left: 240px;
   flex: 1;
-  padding: 32px;
-  overflow-y: auto;
-  min-width: 0;
+  padding: 40px 48px;
+  min-height: 100vh;
 }
 
 /* ── PAGE HEADER ──────────────────────────────────────────── */
@@ -1190,35 +1132,14 @@ function formatPrice(value) {
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 768px) {
-  .admin-layout {
-    flex-direction: column;
+@media (max-width: 900px) {
+  .admin-main {
+    margin-left: 0;
+    padding: 24px 16px;
   }
 
   .sidebar {
-    width: 100%;
-    min-height: auto;
-    height: auto;
-    position: relative;
-  }
-
-  .sidebar-nav {
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 8px;
-  }
-
-  .nav-item {
-    white-space: nowrap;
-    font-size: 13px;
-  }
-
-  .sidebar-footer {
     display: none;
-  }
-
-  .main-content {
-    padding: 20px 16px;
   }
 
   .form-grid-2 {

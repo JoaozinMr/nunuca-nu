@@ -31,7 +31,9 @@ class ProductController extends Controller
     {
         $data = $request->validated();
 
-        if ($request->hasFile('image')) {
+        if ($request->filled('image') && is_string($request->input('image')) && str_starts_with($request->input('image'), 'data:image')) {
+            $data['image_path'] = $this->saveBase64Image($request->input('image'));
+        } elseif ($request->hasFile('image')) {
             $data['image_path'] = $request->file('image')
                 ->store('products', 'public');
         }
@@ -53,14 +55,17 @@ class ProductController extends Controller
     {
         $data = $request->validated();
 
-        if ($request->hasFile('image')) {
+        if (($request->filled('image') && is_string($request->input('image'))) || $request->hasFile('image')) {
             // Delete old image to avoid orphaned files
             if ($product->image_path) {
                 Storage::disk('public')->delete($product->image_path);
             }
 
-            $data['image_path'] = $request->file('image')
-                ->store('products', 'public');
+            if (is_string($request->input('image')) && str_starts_with($request->input('image'), 'data:image')) {
+                $data['image_path'] = $this->saveBase64Image($request->input('image'));
+            } else {
+                $data['image_path'] = $request->file('image')->store('products', 'public');
+            }
         }
 
         unset($data['image']);
@@ -68,6 +73,19 @@ class ProductController extends Controller
         $product->update($data);
 
         return back()->with('success', 'Produto atualizado com sucesso!');
+    }
+
+    protected function saveBase64Image(string $base64String): string
+    {
+        $imageParts = explode(';base64,', $base64String);
+        $imageTypeAux = explode('image/', $imageParts[0]);
+        $imageType = $imageTypeAux[1];
+        $imageBase64 = base64_decode($imageParts[1]);
+        $fileName = 'products/' . uniqid() . '.' . $imageType;
+        
+        Storage::disk('public')->put($fileName, $imageBase64);
+        
+        return $fileName;
     }
 
     public function destroy(Product $product): RedirectResponse

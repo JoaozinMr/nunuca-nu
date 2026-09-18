@@ -19,6 +19,7 @@ class ProductResource extends JsonResource
             'category'    => $this->category,
             'description' => $this->description,
             'price'       => (float) $this->price,
+            'image_path'  => $this->image_path,
             'image_url'   => $this->image_url, // via accessor on model
             'is_available'=> $this->is_available,
             'is_new'      => $this->is_new,

@@ -21,11 +21,28 @@ class OrderController extends Controller
     public function index(Request $request): Response
     {
         $status = $request->query('status');
+        $sortField = $request->query('sort', 'created_at');
+        $sortDir = $request->query('direction', 'desc');
 
-        $query = Order::with('items')->latest();
+        // Validate sort column
+        $allowedSorts = ['id', 'total', 'total_items', 'created_at'];
+        if (! in_array($sortField, $allowedSorts, strict: true)) {
+            $sortField = 'created_at';
+        }
+
+        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
+
+        $query = Order::with('items');
 
         if ($status && in_array($status, array_keys(Order::STATUS_LABELS), strict: true)) {
             $query->where('status', $status);
+        }
+
+        // Apply sorting
+        if ($sortField === 'total_items') {
+            $query->withCount('items')->orderBy('items_count', $sortDir);
+        } else {
+            $query->orderBy($sortField, $sortDir);
         }
 
         $orders = $query->paginate(20)->withQueryString();
@@ -42,6 +59,8 @@ class OrderController extends Controller
             'counts'       => $counts,
             'statusLabels' => Order::STATUS_LABELS,
             'activeStatus' => $status ?? 'all',
+            'sortField'    => $sortField,
+            'sortDir'      => $sortDir,
         ]);
     }
 

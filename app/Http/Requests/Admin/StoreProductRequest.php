@@ -25,7 +25,7 @@ class StoreProductRequest extends FormRequest
             'min_stock'   => ['required', 'integer', 'min:0'],
             'is_available'=> ['boolean'],
             'is_new'      => ['boolean'],
-            'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'image'       => ['nullable'],
         ];
     }
 
@@ -40,16 +40,35 @@ class StoreProductRequest extends FormRequest
             'stock.required'    => 'Informe o estoque.',
             'min_stock.required'=> 'Informe o estoque mínimo.',
             'image.image'       => 'O arquivo deve ser uma imagem.',
-            'image.max'         => 'A imagem deve ter no máximo 4 MB.',
+            'image.max'         => 'A imagem deve ter no máximo 2 MB.',
+            'image.uploaded'    => 'Falha ao fazer o upload. O arquivo pode ser muito grande (limite de 2 MB).',
         ];
     }
 
     protected function prepareForValidation(): void
     {
+        \Log::info('StoreProductRequest image type: ' . gettype($this->image));
+        if ($this->hasFile('image')) {
+            \Log::info('StoreProductRequest file size: ' . $this->file('image')->getSize());
+            \Log::info('StoreProductRequest file valid: ' . ($this->file('image')->isValid() ? 'yes' : 'no'));
+        } else {
+            \Log::info('StoreProductRequest value of image: ', (array) $this->image);
+        }
+
         // Coerce checkbox booleans sent as "1"/"0" strings from FormData
         $this->merge([
             'is_available' => filter_var($this->is_available ?? true,  FILTER_VALIDATE_BOOLEAN),
             'is_new'       => filter_var($this->is_new       ?? false, FILTER_VALIDATE_BOOLEAN),
         ]);
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (request()->hasFile('image') && !request()->file('image')->isValid()) {
+                \Log::error('Upload error code (Store): ' . request()->file('image')->getError());
+                \Log::error('Upload error message (Store): ' . request()->file('image')->getErrorMessage());
+            }
+        });
     }
 }

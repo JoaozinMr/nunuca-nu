@@ -54,10 +54,7 @@
     <!-- ═══════════════════════════════════════ TICKER ═══════════════════════════════════════ -->
     <div class="ticker-wrap">
       <div class="ticker-track">
-        <span class="ticker-set" aria-hidden="true">
-          Alfajor&nbsp;·&nbsp;Palha Italiana&nbsp;·&nbsp;Copo Brigadeiro&nbsp;·&nbsp;Doce de Leite&nbsp;·&nbsp;Brigadeiro&nbsp;·&nbsp;Oreo&nbsp;·&nbsp;Artesanal&nbsp;·&nbsp;nunuca.nu&nbsp;&nbsp;&nbsp;
-        </span>
-        <span class="ticker-set" aria-hidden="true">
+        <span class="ticker-set" v-for="n in 4" :key="n" aria-hidden="true">
           Alfajor&nbsp;·&nbsp;Palha Italiana&nbsp;·&nbsp;Copo Brigadeiro&nbsp;·&nbsp;Doce de Leite&nbsp;·&nbsp;Brigadeiro&nbsp;·&nbsp;Oreo&nbsp;·&nbsp;Artesanal&nbsp;·&nbsp;nunuca.nu&nbsp;&nbsp;&nbsp;
         </span>
       </div>
@@ -194,13 +191,19 @@
     <Transition name="drawer-slide">
       <div v-if="cartOpen" class="cart-drawer">
         <div class="drawer-header">
-          <h3 class="drawer-title">Seu carrinho 🛍️</h3>
+          <h3 class="drawer-title">Seu carrinho</h3>
           <button class="drawer-close" @click="cartOpen = false">✕</button>
         </div>
 
         <!-- Empty state -->
         <div v-if="cart.length === 0" class="cart-empty">
-          <span class="cart-empty-icon">🍬</span>
+          <span class="cart-empty-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+          </span>
           <p>Seu carrinho está vazio.</p>
           <button class="btn btn-primary" style="margin-top:1rem;" @click="cartOpen = false">Ver cardápio</button>
         </div>
@@ -233,11 +236,11 @@
             <button
               :class="['dt-btn', { active: deliveryType === 'pickup' }]"
               @click="deliveryType = 'pickup'"
-            >🏪 Retirada</button>
+            >Retirada</button>
             <button
               :class="['dt-btn', { active: deliveryType === 'delivery' }]"
               @click="deliveryType = 'delivery'"
-            >🚚 Entrega</button>
+            >Entrega</button>
           </div>
 
           <div class="cart-total">
@@ -259,7 +262,7 @@
       <div v-if="checkoutOpen" class="modal-overlay" @click.self="checkoutOpen = false">
         <div class="modal">
           <div class="modal-header">
-            <h3 class="modal-title">Finalizar pedido 🍫</h3>
+            <h3 class="modal-title">Finalizar pedido</h3>
             <button class="drawer-close" @click="checkoutOpen = false">✕</button>
           </div>
           <div class="modal-body">
@@ -709,7 +712,7 @@ body {
 }
 .ticker-track {
   display: inline-flex;
-  animation: ticker 28s linear infinite;
+  animation: ticker 40s linear infinite;
 }
 .ticker-set {
   font-family: 'Fredoka', sans-serif;
@@ -718,6 +721,8 @@ body {
   letter-spacing: 0.04em;
   padding-right: 3rem;
   color: var(--cream);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 @keyframes ticker {
   from { transform: translateX(0); }

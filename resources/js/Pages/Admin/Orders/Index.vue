@@ -7,6 +7,8 @@ const props = defineProps({
   counts:       Object,  // {all, pending, preparing, out_for_delivery, completed, canceled}
   statusLabels: Object,
   activeStatus: String,
+  sortField:    { type: String, default: 'created_at' },
+  sortDir:      { type: String, default: 'desc' },
 })
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -33,6 +35,18 @@ const tabs = [
 
 function setFilter(key) {
   const params = key === 'all' ? {} : { status: key }
+  params.sort = props.sortField
+  params.direction = props.sortDir
+  router.get(route('admin.orders.index'), params, { preserveState: false })
+}
+
+function sort(field) {
+  let dir = 'desc'
+  if (props.sortField === field) {
+    dir = props.sortDir === 'asc' ? 'desc' : 'asc'
+  }
+  const params = { sort: field, direction: dir }
+  if (props.activeStatus !== 'all') params.status = props.activeStatus
   router.get(route('admin.orders.index'), params, { preserveState: false })
 }
 
@@ -167,13 +181,25 @@ function updateStatus(status) {
           <table v-if="orders.data && orders.data.length > 0">
             <thead>
               <tr>
-                <th>Código</th>
+                <th class="sortable-th" @click="sort('id')">
+                  Código
+                  <span v-if="sortField === 'id'" class="sort-arrow">{{ sortDir === 'asc' ? '↑' : '↓' }}</span>
+                </th>
                 <th>Cliente</th>
-                <th>Itens</th>
-                <th>Total</th>
+                <th class="sortable-th" @click="sort('total_items')">
+                  Itens
+                  <span v-if="sortField === 'total_items'" class="sort-arrow">{{ sortDir === 'asc' ? '↑' : '↓' }}</span>
+                </th>
+                <th class="sortable-th" @click="sort('total')">
+                  Total
+                  <span v-if="sortField === 'total'" class="sort-arrow">{{ sortDir === 'asc' ? '↑' : '↓' }}</span>
+                </th>
                 <th>Tipo</th>
                 <th>Status</th>
-                <th>Data</th>
+                <th class="sortable-th" @click="sort('created_at')">
+                  Data
+                  <span v-if="sortField === 'created_at'" class="sort-arrow">{{ sortDir === 'asc' ? '↑' : '↓' }}</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -381,6 +407,11 @@ tr:last-child td { border-bottom: none; }
 .page-btn:hover:not(:disabled) { border-color: #3B1A0C; color: #3B1A0C; }
 .page-btn.active { background: #3B1A0C; color: #F6EEE0; border-color: #3B1A0C; }
 .page-btn--disabled { opacity: .4; cursor: default; }
+
+/* ── Sortable headers ──────────────────────────────────────────────── */
+.sortable-th { cursor: pointer; user-select: none; transition: color .15s; }
+.sortable-th:hover { color: #3B1A0C; }
+.sort-arrow { margin-left: 4px; font-size: 10px; }
 
 /* ── Modal ──────────────────────────────────────────────────────────────────── */
 .modal-backdrop { position: fixed; inset: 0; background: rgba(59,26,12,.48); z-index: 400; display: flex; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }

@@ -25,8 +25,7 @@ class UpdateProductRequest extends FormRequest
             'min_stock'   => ['required', 'integer', 'min:0'],
             'is_available'=> ['boolean'],
             'is_new'      => ['boolean'],
-            // Image is optional on update — only validated if provided
-            'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'image'       => ['nullable'], // Base64 or UploadedFile
         ];
     }
 
@@ -41,5 +40,15 @@ class UpdateProductRequest extends FormRequest
             'is_available' => filter_var($this->is_available ?? true,  FILTER_VALIDATE_BOOLEAN),
             'is_new'       => filter_var($this->is_new       ?? false, FILTER_VALIDATE_BOOLEAN),
         ]);
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (request()->hasFile('image') && !request()->file('image')->isValid()) {
+                \Log::error('Upload error code: ' . request()->file('image')->getError());
+                \Log::error('Upload error message: ' . request()->file('image')->getErrorMessage());
+            }
+        });
     }
 }

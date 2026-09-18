@@ -28,7 +28,12 @@ Route::get('/pedido/{code}', [CheckoutController::class, 'confirmation'])
 // ── Admin ─────────────────────────────────────────────────────────────────────
 Route::prefix('admin')->name('admin.')->group(function (): void {
 
-    Route::redirect('/', '/admin/login')->name('admin.home');
+    Route::get('/', function () {
+        if (auth()->check() && auth()->user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('admin.login');
+    })->name('admin.home');
 
     // ── Auth (guest only) ─────────────────────────────────────────────────────
     Route::middleware('guest')->group(function (): void {
